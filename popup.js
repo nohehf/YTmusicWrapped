@@ -63,7 +63,13 @@ function on_analyseButton_click () {
 
     let rootContent = getElementByXpath("/html/body/ytmusic-app/ytmusic-app-layout/div[3]/ytmusic-browse-response/ytmusic-section-list-renderer/div[2]/ytmusic-shelf-renderer[1]/div[2]",document)
     
-    let first_thing = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]',rootContent)
+    let songs = getElementsListByXPath('ytmusic-responsive-list-item-renderer',rootContent)
+
+    for (song of songs) {
+      
+    }
+
+    //let first_thing = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]',rootContent)
 
     data = {}
 
@@ -84,23 +90,21 @@ function on_analyseButton_click () {
     data["artist_name"] = artist.innerHTML
     data["album_name"] = album.innerHTML
 
-    save_data(data)
+    //save_data(data)
 
-    alert(JSON.stringify(data))
+    chrome.storage.sync.get(["music_data"], (result) => {save_data(data,result)});
+
+    //alert(JSON.stringify(data))
     
   }
 
   function save_data(data,result) {
 
-    var music_data = 
+    var music_data = result.music_data
 
     function update_music_data(result) {
       music_data = result.music_data;
     }
-
-    chrome.storage.sync.get(["music_data"], update_music_data);
-
-    console.log(music_data)
 
     songKey = data.song_name + data.artist_name + data.album_name
     albumKey = data.artist_name + data.album_name
@@ -108,7 +112,6 @@ function on_analyseButton_click () {
     if (! (songKey in music_data["song"])) {
 
       //ajouter son
-      console.log("ajouter son")
       music_data["song"][songKey] = {song_name: data.song_name, artist_name: data.artist_name, album_name: data.album_name, image_url: data.image_url, listenings: 0}
 
       if(!(albumKey in music_data["album"])) {
@@ -125,15 +128,31 @@ function on_analyseButton_click () {
 
     }
 
-    //incrémenter les listenings:
-    music_data["song"][songKey]["listenings"] = music_data["song"][songKey]["listenings"] + 1
-    music_data["album"][album]["listenings"] = music_data["album"][album]["listenings"] + 1
-    music_data["artist"][artistKey]["listenings"] = music_data["artist"][artistKey]["listenings"] + 1
+    
 
+    //incrémenter les listenings:
+    music_data["song"][songKey]["listenings"] += 1
+    music_data["album"][albumKey]["listenings"] += 1
+    music_data["artist"][artistKey]["listenings"] += 1
+
+    console.log(music_data)
+
+    chrome.storage.sync.set({music_data : music_data});
   }
 
   function getElementByXpath(path, root) {
     return document.evaluate(path, root, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+  }
+
+  function getElementsListByXPath(xpath, parent)
+  {
+      let results = [];
+      let query = document.evaluate(xpath, parent || document,
+          null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      for (let i = 0, length = query.snapshotLength; i < length; ++i) {
+          results.push(query.snapshotItem(i));
+      }
+      return results;
   }
 
   function get_tab_url(){
