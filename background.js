@@ -26,8 +26,8 @@ let stats = {
 }
 
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({music_data : music_data});
-  chrome.storage.sync.set({stats : stats});
-  chrome.storage.sync.set({console_data : "empty console"});
+  chrome.storage.local.set({music_data : music_data});
+  chrome.storage.local.set({stats : stats});
+  chrome.storage.local.set({console_data : "empty console"});
   console.log(music_data)
 });

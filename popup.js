@@ -3,7 +3,7 @@ let analyseButton = document.getElementById("analyseButton");
 update_displayed_stats();
 
 //console in the popup:
-// chrome.storage.sync.get(["console_data"], (result) => {
+// chrome.storage.local.get(["console_data"], (result) => {
 //   document.getElementById("devConsole").innerHTML = result.console_data;
 // });
 
@@ -23,7 +23,7 @@ function clg(text) {
 }
 
 
-// chrome.storage.sync.get("color", ({ color }) => {
+// chrome.storage.local.get("color", ({ color }) => {
 //   changeColor.style.backgroundColor = color;
 // });
 
@@ -33,8 +33,11 @@ analyseButton.addEventListener("click", async () => {
 
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      function: on_analyseButton_click,
-    },()=>{
+      func: on_analyseButton_click,
+    },(injectionResults)=>{
+      //SEUL TRUC QUI MARCHE PAS ENCORE
+      console.log(injectionResults)
+      console.log("analyse button click callback")
       update_displayed_stats();
     })
   });
@@ -52,7 +55,7 @@ function on_analyseButton_click () {
   //   console.log("analyse")
     let data_list = get_data()
     callback = (music_data) => update_stats(music_data)
-    chrome.storage.sync.get(["music_data"], (result) => {save_data(data_list,result,callback)})
+    chrome.storage.local.get(["music_data"], (result) => {save_data(data_list,result,callback)})
 
 
    } else {
@@ -100,11 +103,11 @@ function on_analyseButton_click () {
       data["album_name"] = album.innerHTML
 
 
-      // chrome.storage.sync.get(["music_data"], (result) => {save_data(data,result)});
+      // chrome.storage.local.get(["music_data"], (result) => {save_data(data,result)});
       data_list.push(data)
     }
 
-    // chrome.storage.sync.get(["music_data"], (result) => {console.log(result.music_data)})
+    // chrome.storage.local.get(["music_data"], (result) => {console.log(result.music_data)})
 
     return data_list
 
@@ -131,7 +134,7 @@ function on_analyseButton_click () {
 
     //save_data(data)
 
-    // chrome.storage.sync.get(["music_data"], (result) => {save_data(data,result)});
+    // chrome.storage.local.get(["music_data"], (result) => {save_data(data,result)});
 
     //alert(JSON.stringify(data))
     
@@ -182,8 +185,9 @@ function on_analyseButton_click () {
 
     }
     // console.log(music_data)
-    chrome.storage.sync.set({music_data : music_data}, ()=> {
-      console.log('saved music_data')
+    chrome.storage.local.set({music_data : music_data}, ()=> {
+      console.log('saved data : ')
+      console.log(music_data)
       callback(music_data)
     })
   }
@@ -234,11 +238,11 @@ function on_analyseButton_click () {
 
 
     console.log(stats)
-    chrome.storage.sync.set({stats : stats})
+    chrome.storage.local.set({stats : stats})
 
     //console.log(music_data.song.sort((a,b) => (a.listenings > b.listenings) ? 1 : (a.listenings > b.listenings) ? -1 : 0))
 
-    // chrome.storage.sync.get(["stats"], (result) => {
+    // chrome.storage.local.get(["stats"], (result) => {
   
     //   let stats = result.stats
 
@@ -251,13 +255,14 @@ function on_analyseButton_click () {
   
   }
 
+  true
 
 }
 
 function update_displayed_stats() {
 
   console.log("update displayed stats...");
-  chrome.storage.sync.get(["stats"], (result) => {
+  chrome.storage.local.get(["stats"], (result) => {
 
     let stats = result.stats
     console.log(stats)
@@ -280,7 +285,7 @@ function update_displayed_stats() {
     document.getElementById("artist_artistName").innerHTML = first_artist.artist_name
     document.getElementById("artist_listenings").innerHTML = first_artist.listenings + ' listenings'
     document.getElementById("artist_img").src = first_artist.image_url
-
+    
   })
 
 }
