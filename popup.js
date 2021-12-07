@@ -48,7 +48,9 @@ function on_analyseButton_click () {
   if (get_tab_url() == "https://music.youtube.com/history" && is_user_connected()) {
 
   //   console.log("analyse")
-     get_data()
+    let data_list = get_data()
+    chrome.storage.sync.get(["music_data"], (result) => {save_data(data_list,result)})
+
 
    } else {
 
@@ -59,7 +61,7 @@ function on_analyseButton_click () {
 
   function get_data(){
 
-    
+    var data_list = []
 
     //let rootContent = getElementByXpath("/html/body/ytmusic-app/ytmusic-app-layout/div[3]/ytmusic-browse-response/ytmusic-section-list-renderer/div[2]/ytmusic-shelf-renderer[1]/div[2]",document)
     
@@ -90,10 +92,13 @@ function on_analyseButton_click () {
       data["album_name"] = album.innerHTML
 
 
-      chrome.storage.sync.get(["music_data"], (result) => {save_data(data,result)});
+      // chrome.storage.sync.get(["music_data"], (result) => {save_data(data,result)});
+      data_list.push(data)
     }
 
-    chrome.storage.sync.get(["music_data"], (result) => {console.log(result.music_data)})
+    // chrome.storage.sync.get(["music_data"], (result) => {console.log(result.music_data)})
+
+    return data_list
 
     //let first_thing = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]',rootContent)
 
@@ -124,7 +129,8 @@ function on_analyseButton_click () {
     
   }
 
-  function save_data(data,result) {
+  function save_data(data_list,result) {
+    
 
     var music_data = result.music_data
 
@@ -132,35 +138,41 @@ function on_analyseButton_click () {
       music_data = result.music_data;
     }
 
-    songKey = data.song_name + data.artist_name + data.album_name
-    albumKey = data.artist_name + data.album_name
-    artistKey = data.artist_name
-    if (! (songKey in music_data["song"])) {
 
-      //ajouter son
-      music_data["song"][songKey] = {song_name: data.song_name, artist_name: data.artist_name, album_name: data.album_name, image_url: data.image_url, listenings: 0}
+    for (data of data_list) {
 
-      if(!(albumKey in music_data["album"])) {
-
-        music_data["album"][albumKey] = {artist_name: data.artist_name, album_name: data.album_name, image_url: data.image_url, listenings: 0}
-
-        if(!(data.artist_name in music_data["artist"])) {
-
-          music_data["artist"][artistKey] = {artist_name: data.artist_name, image_url: data.image_url, listenings: 0}
-
+      songKey = data.song_name + data.artist_name + data.album_name
+      albumKey = data.artist_name + data.album_name
+      artistKey = data.artist_name
+      if (! (songKey in music_data["song"])) {
+  
+        //ajouter son
+        music_data["song"][songKey] = {song_name: data.song_name, artist_name: data.artist_name, album_name: data.album_name, image_url: data.image_url, listenings: 0}
+  
+        if(!(albumKey in music_data["album"])) {
+  
+          music_data["album"][albumKey] = {artist_name: data.artist_name, album_name: data.album_name, image_url: data.image_url, listenings: 0}
+  
+          if(!(data.artist_name in music_data["artist"])) {
+  
+            music_data["artist"][artistKey] = {artist_name: data.artist_name, image_url: data.image_url, listenings: 0}
+  
+          }
+  
         }
-
+  
       }
+  
+      
+  
+      //incrémenter les listenings:
+      music_data["song"][songKey]["listenings"] += 1
+      music_data["album"][albumKey]["listenings"] += 1
+      music_data["artist"][artistKey]["listenings"] += 1
+
 
     }
-
-    
-
-    //incrémenter les listenings:
-    music_data["song"][songKey]["listenings"] += 1
-    music_data["album"][albumKey]["listenings"] += 1
-    music_data["artist"][artistKey]["listenings"] += 1
-
+    console.log(music_data)
     chrome.storage.sync.set({music_data : music_data});
   }
 
