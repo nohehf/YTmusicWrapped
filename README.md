@@ -3,6 +3,7 @@
 A chrome extention to get listening stats from your youtube music account.
 
 Just go to https://music.youtube.com/history and it displays your listening stats from today:
+
 ![extention popup](https://raw.githubusercontent.com/nohehf/YTmusicWrapped/main/screenshot.png?token=APP2R5AE7OVHI7GYLXHCV3LBXETMK)
 
 ## Warning:
