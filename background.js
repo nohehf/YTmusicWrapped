@@ -25,9 +25,14 @@ let stats = {
 }],
 }
 
+let settings = {
+  firstinstall : true,
+}
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.set({music_data : music_data});
   chrome.storage.local.set({stats : stats});
   chrome.storage.local.set({console_data : "empty console"});
+  chrome.storage.local.set({settings : settings});
   console.log(music_data)
 });

@@ -1,6 +1,7 @@
 let analyseButton = document.getElementById("analyseButton");
 
-update_displayed_stats();
+handle_firstinstall()
+
 
 //console in the popup:
 // chrome.storage.local.get(["console_data"], (result) => {
@@ -22,6 +23,41 @@ function clg(text) {
 
 }
 
+function handle_firstinstall() {
+
+  chrome.storage.local.get(["settings"], (result) => {
+    console.log(result.settings)
+    if(result.settings.firstinstall) {
+      chrome.storage.local.set({settings: {firstinstall: false}},()=>{
+        console.log('FORCE RELOAD')
+        callback = () => {document.location.reload(true)}
+        analyse(callback)
+        
+      })
+      
+      
+    } else {
+      analyse()
+    }
+  })
+
+}
+
+async function analyse(callback = ()=>(null)) {
+  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: on_analyseButton_click,
+  },(injectionResults)=>{
+    //SEUL TRUC QUI MARCHE PAS ENCORE
+    console.log(injectionResults)
+    console.log("analyse button click callback")
+    update_displayed_stats();
+    callback();
+    //document.location.reload(true)
+  })
+}
+
 
 // chrome.storage.local.get("color", ({ color }) => {
 //   changeColor.style.backgroundColor = color;
@@ -29,17 +65,9 @@ function clg(text) {
 
 // When the button is clicked, inject setPageBackgroundColor into current page
 analyseButton.addEventListener("click", async () => {
-    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    analyse()
 
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: on_analyseButton_click,
-    },(injectionResults)=>{
-      //SEUL TRUC QUI MARCHE PAS ENCORE
-      console.log(injectionResults)
-      console.log("analyse button click callback")
-      update_displayed_stats();
-    })
+
   });
   
   // The body of this function will be executed as a content script inside the
