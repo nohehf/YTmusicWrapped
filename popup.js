@@ -61,38 +61,64 @@ function on_analyseButton_click () {
 
     
 
-    let rootContent = getElementByXpath("/html/body/ytmusic-app/ytmusic-app-layout/div[3]/ytmusic-browse-response/ytmusic-section-list-renderer/div[2]/ytmusic-shelf-renderer[1]/div[2]",document)
+    //let rootContent = getElementByXpath("/html/body/ytmusic-app/ytmusic-app-layout/div[3]/ytmusic-browse-response/ytmusic-section-list-renderer/div[2]/ytmusic-shelf-renderer[1]/div[2]",document)
     
-    let songs = getElementsListByXPath('ytmusic-responsive-list-item-renderer',rootContent)
+    songsXpath = '/html/body/ytmusic-app/ytmusic-app-layout/div[3]/ytmusic-browse-response/ytmusic-section-list-renderer/div[2]/ytmusic-shelf-renderer[1]/div[2]/ytmusic-responsive-list-item-renderer'
+    let songs = getElementsListByXPath(songsXpath)
 
     for (song of songs) {
+
+      //console.log(song)
+
+      let data = {}
+
+      let image = getElementByXpath('div[1]/ytmusic-thumbnail-renderer/yt-img-shadow/img',song)
       
+      data["image_url"] = image.src
+  
+      let textRoot = getElementByXpath('div[2]',song)
+  
+      let titre = getElementByXpath('div[1]/yt-formatted-string/a', textRoot)
+      
+      let artist = getElementByXpath('div[3]/yt-formatted-string[1]/a[1]', textRoot)
+  
+      let album = getElementByXpath('div[3]/yt-formatted-string[2]/a', textRoot)
+  
+  
+      data["song_name"] = titre.innerHTML
+      data["artist_name"] = artist.innerHTML
+      data["album_name"] = album.innerHTML
+
+
+      chrome.storage.sync.get(["music_data"], (result) => {save_data(data,result)});
     }
+
+    chrome.storage.sync.get(["music_data"], (result) => {console.log(result.music_data)})
 
     //let first_thing = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]',rootContent)
 
-    data = {}
+    // data = {}
 
-    let image = getElementByXpath('//*[@id="img"]',first_thing)
+    // let image = getElementByXpath('//*[@id="img"]',first_thing)
     
-    data["image_url"] = image.src
+    // data["image_url"] = image.src
 
-    let textRoot = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]/div[2]',first_thing)
+    // let textRoot = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]/div[2]',first_thing)
 
-    let titre = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]/div[2]/div[1]/yt-formatted-string/a', textRoot)
+    // let titre = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]/div[2]/div[1]/yt-formatted-string/a', textRoot)
     
-    let artist = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]/div[2]/div[3]/yt-formatted-string[1]/a[1]', textRoot)
+    // let artist = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]/div[2]/div[3]/yt-formatted-string[1]/a[1]', textRoot)
 
-    let album = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]/div[2]/div[3]/yt-formatted-string[2]/a', textRoot)
+    // let album = getElementByXpath('//*[@id="contents"]/ytmusic-responsive-list-item-renderer[1]/div[2]/div[3]/yt-formatted-string[2]/a', textRoot)
 
 
-    data["song_name"] = titre.innerHTML
-    data["artist_name"] = artist.innerHTML
-    data["album_name"] = album.innerHTML
+    // data["song_name"] = titre.innerHTML
+    // data["artist_name"] = artist.innerHTML
+    // data["album_name"] = album.innerHTML
 
     //save_data(data)
 
-    chrome.storage.sync.get(["music_data"], (result) => {save_data(data,result)});
+    // chrome.storage.sync.get(["music_data"], (result) => {save_data(data,result)});
 
     //alert(JSON.stringify(data))
     
@@ -134,8 +160,6 @@ function on_analyseButton_click () {
     music_data["song"][songKey]["listenings"] += 1
     music_data["album"][albumKey]["listenings"] += 1
     music_data["artist"][artistKey]["listenings"] += 1
-
-    console.log(music_data)
 
     chrome.storage.sync.set({music_data : music_data});
   }
