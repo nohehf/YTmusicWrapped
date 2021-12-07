@@ -1,5 +1,6 @@
 let analyseButton = document.getElementById("analyseButton");
 
+update_displayed_stats();
 
 //console in the popup:
 // chrome.storage.sync.get(["console_data"], (result) => {
@@ -134,6 +135,7 @@ function on_analyseButton_click () {
     
   }
 
+
   function save_data(data_list,result) {
     
 
@@ -203,5 +205,42 @@ function on_analyseButton_click () {
   function is_user_connected() {
     return true //todo
   }
+
+
+}
+
+function update_stats() {
+
+  
+
+}
+
+function update_displayed_stats() {
+
+  chrome.storage.sync.get(["stats"], (result) => {
+
+    let stats = result.stats
+    console.log(stats)
+    let first_song = stats.song[0]
+    let first_album = stats.album[0]
+    let first_artist = stats.artist[0]
+
+    document.getElementById("song_songName").innerHTML = first_song.song_name
+    document.getElementById("song_artistName").innerHTML = first_song.artist_name
+    document.getElementById("song_albumName").innerHTML = first_song.album_name
+    document.getElementById("song_listenings").innerHTML = first_song.listenings + ' listenings'
+    document.getElementById("song_img").src = first_song.image_url
+
+
+    document.getElementById("album_artistName").innerHTML = first_album.artist_name
+    document.getElementById("album_albumName").innerHTML = first_album.album_name
+    document.getElementById("album_listenings").innerHTML = first_album.listenings + ' listenings'
+    document.getElementById("album_img").src = first_album.image_url
+
+    document.getElementById("artist_artistName").innerHTML = first_artist.artist_name
+    document.getElementById("artist_listenings").innerHTML = first_artist.listenings + ' listenings'
+    document.getElementById("artist_img").src = first_artist.image_url
+
+  })
 
 }

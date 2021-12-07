@@ -1,12 +1,50 @@
+body {
+  /* min-width: 350px; */
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
 button {
     height: 40px;
-    width: 75px;
+    width: 110px;
     outline: none;
     margin: 10px;
     border: none;
     border-radius: 2px;
 }
 
+h2 {
+  margin-bottom: -15px;
+  margin-top: -5px;
+}
+
+img {
+  width: 100%;
+}
+
+#buttonsWrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+#statsWrapper {
+
+  display: flex;
+  flex-direction: row;
+  
+
+}
+
+.statWrapper {
+
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 10px;
+
+}
 
   
   button.current {

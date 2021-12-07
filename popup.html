@@ -1,13 +1,55 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 <html>
   <head>
     <link rel="stylesheet" href="popup.css">
   </head>
   <body>
-    <button id="analyseButton">Analyse</button>
-    <button id="displayStatsButton">Display stats</button>
+
+    <h2>YTmusic Wrapped</h2>
+
+    <div id="statsWrapper">
+      
+      <div class="statWrapper">
+        <h3>n°1 song:</h3>
+        <span class="songName" id="song_songName">Song name</span>
+        -
+        <span class="artistName" id="song_artistName">Artist name</span>
+        -
+        <span class="albumName" id="song_albumName">Album name</span>
+        -
+        <span class="listenings" id="song_listenings">0 listenings</span>
+        <img id="song_img" src="https://lh3.googleusercontent.com/k-nBzmf7_F6fa1K8Y-eSLAECSGQtvR4rXId6AgSTTISpthhEONfR-gaVWEepBFW2ayiBRUOB2iIgxN65=w120-h120-l90-rj"/>
+      </div>
+
+      <div class="statWrapper">
+        <h3>n°1 album:</h3>
+        <span class="artistName" id="album_artistName">Artist name</span>
+        -
+        <span class="albumName" id="album_albumName">Album name</span>
+        -
+        <span class="listenings" id="album_listenings">0 listenings</span>
+        <img id="album_img" src="https://lh3.googleusercontent.com/k-nBzmf7_F6fa1K8Y-eSLAECSGQtvR4rXId6AgSTTISpthhEONfR-gaVWEepBFW2ayiBRUOB2iIgxN65=w120-h120-l90-rj"/>
+      </div>
+
+      <div class="statWrapper">
+
+        <h3>n°1 artist:</h3>
+        <span class="artistName" id="artist_artistName">Artist name</span>
+        -
+        <span class="listenings" id="artist_listenings">0 listenings</span>
+        <img id="artist_img" src="https://lh3.googleusercontent.com/k-nBzmf7_F6fa1K8Y-eSLAECSGQtvR4rXId6AgSTTISpthhEONfR-gaVWEepBFW2ayiBRUOB2iIgxN65=w120-h120-l90-rj"/>
+      </div>
+
+    </div>
+
+    <div id="buttonsWrapper">
+      <button id="analyseButton">Analyse</button>
+      <button id="displayStatsButton">Advanced stats</button>
+    </div>
+
     <script src="popup.js"></script>
 
-    <p id="devConsole">azeazezae</p>
+    <!-- <p id="devConsole">azeazezae</p> -->
   </body>
 </html>
