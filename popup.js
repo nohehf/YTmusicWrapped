@@ -30,16 +30,17 @@ function clg(text) {
 // When the button is clicked, inject setPageBackgroundColor into current page
 analyseButton.addEventListener("click", async () => {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  
+
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
       function: on_analyseButton_click,
-    });
+    },()=>{
+      update_displayed_stats();
+    })
   });
   
   // The body of this function will be executed as a content script inside the
   // current page
-
 
 
 function on_analyseButton_click () {
@@ -50,7 +51,8 @@ function on_analyseButton_click () {
 
   //   console.log("analyse")
     let data_list = get_data()
-    chrome.storage.sync.get(["music_data"], (result) => {save_data(data_list,result)})
+    callback = (music_data) => update_stats(music_data)
+    chrome.storage.sync.get(["music_data"], (result) => {save_data(data_list,result,callback)})
 
 
    } else {
@@ -136,7 +138,7 @@ function on_analyseButton_click () {
   }
 
 
-  function save_data(data_list,result) {
+  function save_data(data_list,result,callback) {
     
 
     var music_data = result.music_data
@@ -179,8 +181,11 @@ function on_analyseButton_click () {
 
 
     }
-    console.log(music_data)
-    chrome.storage.sync.set({music_data : music_data});
+    // console.log(music_data)
+    chrome.storage.sync.set({music_data : music_data}, ()=> {
+      console.log('saved music_data')
+      callback(music_data)
+    })
   }
 
   function getElementByXpath(path, root) {
@@ -206,17 +211,52 @@ function on_analyseButton_click () {
     return true //todo
   }
 
+  function update_stats(music_data) {
 
-}
 
-function update_stats() {
-
+    //song stats
+    let stats = {}
+    let categories = ['song','album','artist']
+    for(categorie of categories) {
+      let sortable = [];
+      for (let songKey in music_data[categorie]) {
   
+        sortable.push(music_data[categorie][songKey])
+  
+      }
+  
+      sortable.sort((a,b) => a.listenings > b.listenings ? -1 : b.listenings > a.listenings ? 1 : 0)
+      sortable = sortable.slice(0,5)
+      stats[categorie] = sortable
+
+    }
+
+
+
+    console.log(stats)
+    chrome.storage.sync.set({stats : stats})
+
+    //console.log(music_data.song.sort((a,b) => (a.listenings > b.listenings) ? 1 : (a.listenings > b.listenings) ? -1 : 0))
+
+    // chrome.storage.sync.get(["stats"], (result) => {
+  
+    //   let stats = result.stats
+
+      
+  
+    //   console.log(music_data.song.sort((a,b) => (a.listenings > b.listenings) ? 1 : (a.listenings > b.listenings) ? -1 : 0))
+  
+    // })
+  
+  
+  }
+
 
 }
 
 function update_displayed_stats() {
 
+  console.log("update displayed stats...");
   chrome.storage.sync.get(["stats"], (result) => {
 
     let stats = result.stats
