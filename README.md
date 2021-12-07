@@ -20,6 +20,7 @@ I still wanted to develop the extention after knowing that mostly to learn chrom
  4. Better data storage
  5. ~~Better stats~~ -> as mentioned above, this is imposible due to youtube music history page limitations.
  6. Better UI
+ 7. Refactor/clean code
  
 ## How to install ?
 todo
