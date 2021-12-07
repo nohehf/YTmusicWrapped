@@ -82,10 +82,15 @@ function on_analyseButton_click () {
   
       let titre = getElementByXpath('div[1]/yt-formatted-string/a', textRoot)
       
-      let artist = getElementByXpath('div[3]/yt-formatted-string[1]/a[1]', textRoot)
-  
+      var artist = getElementByXpath('div[3]/yt-formatted-string[1]/a[1]', textRoot)
+
+      if(artist === null) {
+        artist = getElementByXpath('div[3]/yt-formatted-string[1]/span[1]',textRoot)
+      }
+
+        
       let album = getElementByXpath('div[3]/yt-formatted-string[2]/a', textRoot)
-  
+      
   
       data["song_name"] = titre.innerHTML
       data["artist_name"] = artist.innerHTML
