@@ -15,7 +15,7 @@ I still wanted to develop the extention after knowing that mostly to learn chrom
 ## Roadmap / possible features:
 
  1. Advanced stats button -> button that opens a new tab with more stats than in the popup (Top 5 in each categories...)
- 2. Not scanning the same song several times
+ 2. Not scanning the same song several times -> Might be hard to find a workaroud, as there is no easy way to tell if a song has already be scanned
  3. Sync storage (it was a feature at the beginning but chrome sync storage max object size was to limited)
  4. Better data storage
  5. ~~Better stats~~ -> as mentioned above, this is imposible due to youtube music history page limitations.
