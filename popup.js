@@ -138,9 +138,12 @@ function injection_scrapping() {
       music_data["album"][albumKey]["listenings"] += 1;
       music_data["artist"][artistKey]["listenings"] += 1;
     }
-    chrome.storage.local.set({ music_data: music_data }, () => {
-      callback(music_data);
-    });
+    //To keep a track: TO FIX -> Currently scan the same history multiple times.
+    // chrome.storage.local.set({ music_data: music_data }, () => {
+    //   callback(music_data);
+    // });
+
+    callback(music_data);
   }
 
   function getElementByXpath(path, root) {
