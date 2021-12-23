@@ -2,10 +2,10 @@
 
 A chrome extention to get listening stats from your youtube music account.
 
-Just go to https://music.youtube.com/history and it displays your listening stats from today:
+Just go to https://music.youtube.com/history , click on the extention, and this popup should appear:
 
 ![extention popup](https://github.com/nohehf/YTmusicWrapped/blob/main/screenshot.png?raw=true)
-
+(these are your listening stats from today)
 ## Warning:
 I actually realised that this extension could never provide perfect stats as the history given by youtube music is already filterd, for exemple a song will never appear in the history several times even if you listen to it 25 times/day.
 Also, it's impossible to get the full history just after installing the extension as youtube music only gives a fixed ammount of songs in the history, and this seem imposible to get around as the page is server side rendered (the filtering occurs on the backend).
